@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>بازی ضرب ششم</title>
+
+<style>
+body{font-family:tahoma;background:#eef2ff;text-align:center;margin:0;padding:0}
+#box{max-width:420px;margin:20px auto;background:#fff;padding:18px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
+input,button{font-size:18px;border-radius:14px;padding:14px;border:none}
+input{width:90%;background:#f3f4ff}
+button{background:#3f51b5;color:#fff;width:90%;margin-top:10px;cursor:pointer}
+button:active{transform:scale(.96)}
+.level{display:flex;gap:8px;margin:10px}
+.level div{flex:1;background:#e3e9ff;padding:12px;border-radius:14px;font-weight:bold;cursor:pointer}
+.active{background:#3f51b5!important;color:#fff}
+#timer{background:#ffe082;border-radius:50px;padding:14px;font-size:22px;margin:10px}
+#q{font-size:34px;color:#3f51b5;font-weight:bold}
+#score{font-weight:bold;margin-top:10px}
+.ok{color:green}.bad{color:red}
+.stamp{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%) rotate(-10deg);
+background:#fff;border:5px solid;padding:20px 30px;border-radius:20px;font-size:38px;z-index:999}
+.green{color:#2e7d32;border-color:#2e7d32}
+.lightgreen{color:#558b2f;border-color:#558b2f}
+.yellow{color:#9e9d24;border-color:#9e9d24}
+.orange{color:#ef6c00;border-color:#ef6c00}
+.red{color:#c62828;border-color:#c62828}
+</style>
+</head>
+
+<body>
+<div id="box">
+
+<h2>🎯 بازی ضرب ششم</h2>
+
+<input id="name" placeholder="نام دانش‌آموز">
+
+<div class="level">
+<div class="active" onclick="setLevel(5,this)">آسان</div>
+<div onclick="setLevel(7,this)">متوسط</div>
+<div onclick="setLevel(10,this)">سخت</div>
+</div>
+
+<div id="timer">⏱ شروع</div>
+<div id="q">—</div>
+
+<input id="ans" type="number" placeholder="جواب">
+
+<button onclick="check()">ثبت جواب</button>
+
+<div id="score">
+درست: <span id="ok" class="ok">0</span> |
+غلط: <span id="bad" class="bad">0</span>
+</div>
+
+</div>
+
+<script>
+let max=5,a,b,correct,timer,time=15,ok=0,bad=0,count=0
+
+function setLevel(m,el){
+max=m
+document.querySelectorAll('.level div').forEach(d=>d.classList.remove('active'))
+el.classList.add('active')
+}
+
+function newQ(){
+count++
+a=Math.floor(Math.random()*max)+1
+b=Math.floor(Math.random()*max)+1
+correct=a*b
+document.getElementById("q").innerText=a+" × "+b
+document.getElementById("ans").value=""
+startTimer()
+}
+
+function startTimer(){
+clearInterval(timer)
+time=15
+document.getElementById("timer").innerText="⏱ "+time
+timer=setInterval(()=>{
+time--
+document.getElementById("timer").innerText="⏱ "+time
+if(time<=0){
+clearInterval(timer)
+bad++
+update()
+next()
+}
+},1000)
+}
+
+function check(){
+clearInterval(timer)
+if(Number(ans.value)===correct) ok++
+else bad++
+update()
+next()
+}
+
+function update(){
+okSpan.innerText=ok
+badSpan.innerText=bad
+}
+
+function next(){
+if(count>=10){showStamp();return}
+setTimeout(newQ,500)
+}
+
+function showStamp(){
+let t,c
+if(bad==0){t="عالی";c="green"}
+else if(bad==1){t="خیلی خوب";c="lightgreen"}
+else if(bad==2){t="خوب";c="yellow"}
+else if(bad==3){t="قابل قبول";c="orange"}
+else{t="بیشتر تمرین کن";c="red"}
+let s=document.createElement("div")
+s.className="stamp "+c
+s.innerHTML=t+'<div style="font-size:20px">«یاورزاده»</div>'
+document.body.appendChild(s)
+}
+
+const okSpan=document.getElementById("ok")
+const badSpan=document.getElementById("bad")
+newQ()
+</script>
+
+</body>
+</html>
