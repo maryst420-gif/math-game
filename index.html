@@ -1,131 +1,107 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>بازی ضرب ششم</title>
-
 <style>
-body{font-family:tahoma;background:#eef2ff;text-align:center;margin:0;padding:0}
-#box{max-width:420px;margin:20px auto;background:#fff;padding:18px;border-radius:20px;box-shadow:0 10px 30px rgba(0,0,0,.2)}
-input,button{font-size:18px;border-radius:14px;padding:14px;border:none}
-input{width:90%;background:#f3f4ff}
-button{background:#3f51b5;color:#fff;width:90%;margin-top:10px;cursor:pointer}
-button:active{transform:scale(.96)}
-.level{display:flex;gap:8px;margin:10px}
-.level div{flex:1;background:#e3e9ff;padding:12px;border-radius:14px;font-weight:bold;cursor:pointer}
-.active{background:#3f51b5!important;color:#fff}
-#timer{background:#ffe082;border-radius:50px;padding:14px;font-size:22px;margin:10px}
-#q{font-size:34px;color:#3f51b5;font-weight:bold}
-#score{font-weight:bold;margin-top:10px}
-.ok{color:green}.bad{color:red}
-.stamp{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%) rotate(-10deg);
-background:#fff;border:5px solid;padding:20px 30px;border-radius:20px;font-size:38px;z-index:999}
-.green{color:#2e7d32;border-color:#2e7d32}
-.lightgreen{color:#558b2f;border-color:#558b2f}
-.yellow{color:#9e9d24;border-color:#9e9d24}
-.orange{color:#ef6c00;border-color:#ef6c00}
-.red{color:#c62828;border-color:#c62828}
+body{background:#eef2ff;transition:0.5s;font-family:tahoma;text-align:center;}
+#gameBox{max-width:440px;margin:auto;padding:20px;background:#fff;border-radius:22px;box-shadow:0 14px 35px rgba(0,0,0,.2);transition:0.5s;}
+.bigInput{width:70%;padding:16px;font-size:18px;border-radius:12px;margin:8px 0;}
+.row{display:flex;gap:10px;margin:10px 0;}
+.card{flex:1;padding:14px;border-radius:14px;background:#e3e9ff;font-weight:bold;cursor:pointer;transition:.3s;text-align:center;font-size:16px;}
+.card.active{background:#5c6bc0;color:#fff;}
+#timerBox{padding:16px;background:#ffe082;font-size:22px;cursor:pointer;margin:12px 0;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:50px;transition:0.3s;}
+.timerIcon{width:50px;height:50px;background:#ffc107;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:22px;}
+#question{font-size:36px;font-weight:bold;color:#3f51b5;margin:14px 0;}
+.answerRow{display:flex;gap:8px;justify-content:center;align-items:center;}
+#submitBtn{flex:1;background:linear-gradient(135deg,#3949ab,#1e88e5);color:#fff;font-size:18px;border:none;border-radius:14px;height:56px;font-weight:bold;box-shadow:0 6px 14px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;gap:6px;}
+#submitBtn:active{transform:scale(.97);}
+.answerRow input{flex:2;height:56px;font-size:20px;}
+#ok{color:green;font-weight:bold;}
+#bad{color:red;font-weight:bold;}
+#score{margin-top:12px;font-weight:bold;}
+#feedback.correct{color:green;}
+#feedback.wrong{color:red;}
+.stamp{position:fixed;top:40%;left:50%;transform:translate(-50%,-50%) rotate(-12deg);font-size:40px;padding:22px 34px;border:6px solid;border-radius:20px;background:#fff;z-index:999;text-align:center;}
+.green{color:#2e7d32;border-color:#2e7d32;}
+.lightgreen{color:#558b2f;border-color:#558b2f;}
+.yellow{color:#9e9d24;border-color:#9e9d24;}
+.orange{color:#ef6c00;border-color:#ef6c00;}
+.red{color:#c62828;}
+.stamp button{margin-top:10px;padding:10px 18px;border:none;border-radius:12px;background:#5c6bc0;color:#fff;font-size:18px;cursor:pointer;}
+.stamp button:hover{transform:scale(1.05);}
+.card.correct{background:#81c784;color:#fff;}
+.card.wrong{background:#e57373;color:#fff;}
+@media print{#timerBox,.row,.answerRow,button,#feedback{display:none;}body{background:white;}}
 </style>
 </head>
-
 <body>
-<div id="box">
+<div id="gameBox">
 
 <h2>🎯 بازی ضرب ششم</h2>
+<input id="studentName" class="bigInput" placeholder="👤 نام دانش‌آموز">
 
-<input id="name" placeholder="نام دانش‌آموز">
-
-<div class="level">
-<div class="active" onclick="setLevel(5,this)">آسان</div>
-<div onclick="setLevel(7,this)">متوسط</div>
-<div onclick="setLevel(10,this)">سخت</div>
+<div class="row">
+<div class="card active" onclick="setMode('test',this)">📝 آزمون</div>
+<div class="card" onclick="setMode('practice',this)">🧠 تمرینی</div>
 </div>
 
-<div id="timer">⏱ شروع</div>
-<div id="q">—</div>
-
-<input id="ans" type="number" placeholder="جواب">
-
-<button onclick="check()">ثبت جواب</button>
-
-<div id="score">
-درست: <span id="ok" class="ok">0</span> |
-غلط: <span id="bad" class="bad">0</span>
+<div class="row">
+<div class="card active" onclick="setLevel(this)">🌱 آسان</div>
+<div class="card" onclick="setLevel(this)">⚡ متوسط</div>
+<div class="card" onclick="setLevel(this)">🔥 سخت</div>
 </div>
+
+<div id="timerBox" onclick="startGame()">
+<div class="timerIcon">⏱</div> شروع
+</div>
+
+<div id="question"></div>
+<div id="shape"></div>
+
+<div class="answerRow">
+<input type="number" id="answer" class="bigInput" placeholder="جواب را بنویس" onkeydown="if(event.key==='Enter')checkAnswer()">
+<button id="submitBtn" onclick="checkAnswer()">ثبت جواب</button>
+</div>
+
+<div class="row" style="justify-content:center; margin-top:12px;">
+<div class="card" onclick="saveReport()">💾 ذخیره</div>
+<div class="card" onclick="window.print()">🖨 چاپ</div>
+</div>
+
+<div id="score">✅ <span id="ok">0</span> | ❌ <span id="bad">0</span></div>
+<div id="feedback" style="font-size:24px;font-weight:bold;margin-top:12px;"></div>
 
 </div>
 
 <script>
-let max=5,a,b,correct,timer,time=15,ok=0,bad=0,count=0
+let mode="test",level="easy";
+let a,b,correct;
+let ok=0,bad=0,count=0;
+let time=15,timer=null;
+let studentSaved="";
+const okSpan=document.getElementById("ok");
+const badSpan=document.getElementById("bad");
+const feedback=document.getElementById("feedback");
+const submitBtn=document.getElementById("submitBtn");
 
-function setLevel(m,el){
-max=m
-document.querySelectorAll('.level div').forEach(d=>d.classList.remove('active'))
-el.classList.add('active')
-}
-
-function newQ(){
-count++
-a=Math.floor(Math.random()*max)+1
-b=Math.floor(Math.random()*max)+1
-correct=a*b
-document.getElementById("q").innerText=a+" × "+b
-document.getElementById("ans").value=""
-startTimer()
-}
-
-function startTimer(){
-clearInterval(timer)
-time=15
-document.getElementById("timer").innerText="⏱ "+time
-timer=setInterval(()=>{
-time--
-document.getElementById("timer").innerText="⏱ "+time
-if(time<=0){
-clearInterval(timer)
-bad++
-update()
-next()
-}
-},1000)
-}
-
-function check(){
-clearInterval(timer)
-if(Number(ans.value)===correct) ok++
-else bad++
-update()
-next()
-}
-
-function update(){
-okSpan.innerText=ok
-badSpan.innerText=bad
-}
-
-function next(){
-if(count>=10){showStamp();return}
-setTimeout(newQ,500)
-}
-
-function showStamp(){
-let t,c
-if(bad==0){t="عالی";c="green"}
-else if(bad==1){t="خیلی خوب";c="lightgreen"}
-else if(bad==2){t="خوب";c="yellow"}
-else if(bad==3){t="قابل قبول";c="orange"}
-else{t="بیشتر تمرین کن";c="red"}
-let s=document.createElement("div")
-s.className="stamp "+c
-s.innerHTML=t+'<div style="font-size:20px">«یاورزاده»</div>'
-document.body.appendChild(s)
-}
-
-const okSpan=document.getElementById("ok")
-const badSpan=document.getElementById("bad")
-newQ()
+function setMode(m,el){mode=m;el.parentNode.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));el.classList.add('active');}
+function setLevel(el){el.parentNode.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));el.classList.add('active');level=el.innerText;}
+function startGame(){if(!studentSaved){if(studentName.value.trim()===""){alert("نام را وارد کن");return;}studentSaved=studentName.value;}ok=bad=count=0;updateScore();newQuestion();}
+function getRange(){if(level.includes("آسان")) return [1,5];if(level.includes("متوسط")) return [2,7];return [3,10];}
+function newQuestion(){clearInterval(timer);count++;answer.value="";feedback.innerText="";submitBtn.innerHTML="ثبت جواب";let [min,max]=getRange();a=Math.floor(Math.random()*(max-min+1))+min;b=Math.floor(Math.random()*(max-min+1))+min;correct=a*b;question.innerHTML=`${a} × ${b}`;shape.innerHTML="";if(mode==="practice"){for(let i=0;i<a;i++) shape.innerHTML+="● ".repeat(b)+"<br>";timerBox.innerHTML="🧠 تمرینی";} else{startTimer();}}
+function startTimer(){time=15;timerBox.innerHTML='<div class="timerIcon">⏱</div> '+time;timer=setInterval(()=>{time--;timerBox.innerHTML='<div class="timerIcon">⏱</div> '+time;if(time<=0){clearInterval(timer);bad++;updateScore();showFeedback(false);showBtnIcon(false);checkEnd();}},1000);}
+function checkAnswer(){clearInterval(timer);if(Number(answer.value)===correct){ok++;showFeedback(true);showBtnIcon(true);}else{bad++;showFeedback(false);showBtnIcon(false);}updateScore();changeBackground();checkEnd();}
+function showFeedback(isCorrect){feedback.innerText = isCorrect?"درست!":"اشتباه!";feedback.className = isCorrect?"correct":"wrong";}
+function showBtnIcon(isCorrect){submitBtn.innerHTML = (isCorrect?"✔️ ":"✖️ ") + "ثبت جواب";}
+function changeBackground(){const colors=["#e3f2fd","#ffe0b2","#dcedc8","#ffccbc","#f3e5f5","#fff9c4"];document.body.style.background = colors[Math.floor(Math.random()*colors.length)];}
+function updateScore(){okSpan.innerText=ok;badSpan.innerText=bad;}
+function checkEnd(){if(count>=10){showStamp();saveLocal();return;}setTimeout(newQuestion,600);}
+function showStamp(){let text="",cls="";if(bad===0){text="عالی";cls="green";}else if(bad===1){text="خیلی خوب";cls="lightgreen";}else if(bad===2){text="خوب";cls="yellow";}else if(bad===3){text="قابل قبول";cls="orange";}else{text="بیشتر تمرین کن";cls="red";}const s=document.createElement("div");s.className="stamp "+cls;s.innerHTML=`<div>${text}</div><div style="font-size:22px;text-align:right">«یاورزاده»</div><button onclick='restart()'>شروع دوباره</button>`;document.body.appendChild(s);}
+function restart(){document.querySelector(".stamp").remove();startGame();}
+function saveLocal(){let prev = JSON.parse(localStorage.getItem("mathResults")||"[]");prev.push({name:studentSaved,correct:ok,wrong:bad,level:level,date:new Date().toLocaleString()});localStorage.setItem("mathResults",JSON.stringify(prev));}
+function saveReport(){let data = JSON.parse(localStorage.getItem("mathResults")||"[]");let text="نتایج همه دانش‌آموزان:\n\n";data.forEach(r=>{text+=`نام: ${r.name}\nسطح: ${r.level}\nدرست: ${r.correct}\nغلط: ${r.wrong}\nتاریخ: ${r.date}\n-----------------\n`;});const blob=new Blob([text],{type:"text/plain"});const a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download="کارنامه_همه_دانش‌آموزان.txt";a.click();}
 </script>
-
 </body>
 </html>
