@@ -3,80 +3,58 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>بازی ضرب ششم</title>
+<title>بازی جدول ضرب</title>
 
 <style>
 body{background:#eef2ff;transition:0.5s;font-family:tahoma;text-align:center;}
 #gameBox{max-width:440px;margin:auto;padding:20px;background:#fff;border-radius:22px;box-shadow:0 14px 35px rgba(0,0,0,.2);transition:0.5s;}
 
-.bigInput{
-  width:70%;
-  padding:16px;
-  font-size:18px;
-  border-radius:12px;
-  margin:8px 0;
-  box-sizing:border-box;
-}
+.bigInput{width:70%;padding:16px;font-size:18px;border-radius:12px;margin:8px 0;box-sizing:border-box;}
+.input-wrapper{position:relative;width:70%;margin:8px auto;}
+.input-wrapper .bigInput{width:100%;padding-right:52px;}
 
-/* ===== wrapper نام دانش‌آموز (بدون تغییر اندازه) ===== */
-.input-wrapper{
-  position:relative;
-  width:70%;
-  margin:8px auto;
-}
+.logo-link{position:absolute;right:6px;top:50%;transform:translateY(-50%);height:100%;display:flex;align-items:center;}
+.logo-link img{height:65%;animation:seesaw 1.8s ease-in-out infinite;transform-origin:center bottom;}
+@keyframes seesaw{0%{transform:rotate(-10deg)}50%{transform:rotate(10deg)}100%{transform:rotate(-10deg)}}
 
-/* فقط فضای لوگو اضافه شده */
-.input-wrapper .bigInput{
-  width:100%;
-  padding-right:52px;
-}
-
-/* لینک لوگو – کاملاً چسبیده راست */
-.logo-link{
-  position:absolute;
-  right:6px;
-  top:50%;
-  transform:translateY(-50%);
-  height:100%;
-  display:flex;
-  align-items:center;
-}
-
-/* لوگو هم‌قد باکس + انیمیشن سی‌سا */
-.logo-link img{
-  height:65%;
-  animation:seesaw 1.8s ease-in-out infinite;
-  transform-origin:center bottom;
-}
-
-/* انیمیشن سی‌سا (نه دایره‌ای) */
-@keyframes seesaw{
-  0%{transform:rotate(-10deg)}
-  50%{transform:rotate(10deg)}
-  100%{transform:rotate(-10deg)}
-}
-
-/* ===== بقیه کد بدون تغییر ===== */
 .row{display:flex;gap:10px;margin:10px 0;}
-.card{flex:1;padding:14px;border-radius:14px;background:#e3e9ff;font-weight:bold;cursor:pointer;transition:.3s;text-align:center;font-size:16px;}
+.card{flex:1;padding:14px;border-radius:14px;background:#e3e9ff;font-weight:bold;cursor:pointer;transition:.3s;font-size:16px;}
 .card.active{background:#5c6bc0;color:#fff;}
-#timerBox{padding:16px;background:#ffe082;font-size:22px;cursor:pointer;margin:12px 0;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:50px;transition:0.3s;}
-.timerIcon{width:50px;height:50px;background:#ffc107;display:flex;align-items:center;justify-content:center;border-radius:50%;font-size:22px;}
-#question{font-size:36px;font-weight:bold;color:#3f51b5;margin:14px 0;}
-.answerRow{display:flex;gap:8px;justify-content:center;align-items:center;}
-#submitBtn{flex:1;background:linear-gradient(135deg,#3949ab,#1e88e5);color:#fff;font-size:18px;border:none;border-radius:14px;height:56px;font-weight:bold;box-shadow:0 6px 14px rgba(0,0,0,.25);display:flex;align-items:center;justify-content:center;gap:6px;}
-#submitBtn:active{transform:scale(.97);}
-.answerRow input{flex:2;height:56px;font-size:20px;}
-#ok{color:green;font-weight:bold;}
-#bad{color:red;font-weight:bold;}
-#score{margin-top:12px;font-weight:bold;}
-#feedback.correct{color:green;}
-#feedback.wrong{color:red;}
 
-@media print{
-#timerBox,.row,.answerRow,button,#feedback{display:none;}
-body{background:white;}
+#timerBox{padding:16px;background:#ffe082;font-size:22px;cursor:pointer;margin:12px 0;display:flex;align-items:center;justify-content:center;gap:10px;border-radius:50px;}
+.timerIcon{width:50px;height:50px;background:#ffc107;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+
+#question{font-size:36px;font-weight:bold;color:#3f51b5;margin:14px 0;}
+#shape{font-size:20px;line-height:1.8}
+
+.answerRow{display:flex;gap:8px;justify-content:center;}
+#submitBtn{flex:1;background:linear-gradient(135deg,#3949ab,#1e88e5);color:#fff;font-size:18px;border:none;border-radius:14px;height:56px;font-weight:bold;}
+.answerRow input{flex:2;height:56px;font-size:20px;}
+
+#score{font-size:20px;margin-top:10px}
+#okSpan{color:#2e7d32;font-weight:bold}
+#badSpan{color:#c62828;font-weight:bold}
+#feedback{font-size:24px;font-weight:bold;margin-top:10px}
+
+/* مهر */
+.stamp{
+position:fixed;inset:0;background:rgba(0,0,0,.55);
+display:flex;align-items:center;justify-content:center;z-index:9999;
 }
+.stampBox{
+padding:28px 36px;border-radius:22px;
+transform:rotate(-8deg);
+text-align:center;color:#000;
+}
+.stampBox button{
+margin-top:14px;padding:10px 28px;
+font-size:18px;border:none;border-radius:14px;cursor:pointer;
+}
+.great{background:linear-gradient(135deg,#2e7d32,#81c784)}
+.verygood{background:linear-gradient(135deg,#558b2f,#aed581)}
+.good{background:linear-gradient(135deg,#f9a825,#fff59d)}
+.ok{background:linear-gradient(135deg,#ef6c00,#ffcc80)}
+.trymore{background:linear-gradient(135deg,#c62828,#ef9a9a)}
 </style>
 </head>
 
@@ -85,134 +63,175 @@ body{background:white;}
 
 <h2>🎯 بازی ضرب ششم</h2>
 
-<!-- ===== نام دانش‌آموز با لوگوی دقیق ===== -->
 <div class="input-wrapper">
-  <input id="studentName" class="bigInput" placeholder="👤 نام دانش‌آموز">
-  <a href="https://mizedanesh.blogfa.com/" target="_blank" class="logo-link">
-    <img src="https://s6.uupload.ir/files/logos1_f7lj.png" alt="لوگو">
-  </a>
+<input id="studentName" class="bigInput" placeholder="👤 نام دانش‌آموز">
+<a href="https://mizedanesh.blogfa.com/" target="_blank" class="logo-link">
+<img src="https://s6.uupload.ir/files/logos1_f7lj.png">
+</a>
 </div>
 
 <div class="row">
-  <div class="card active" onclick="setMode('test',this)">📝 آزمون</div>
-  <div class="card" onclick="setMode('practice',this)">🧠 تمرینی</div>
+<div class="card active" onclick="setMode('test',this)">📝 آزمون</div>
+<div class="card" onclick="setMode('practice',this)">🧠 تمرینی</div>
 </div>
 
 <div class="row">
-  <div class="card active" onclick="setLevel(this)">🌱 آسان</div>
-  <div class="card" onclick="setLevel(this)">⚡ متوسط</div>
-  <div class="card" onclick="setLevel(this)">🔥 سخت</div>
+<div class="card active" onclick="setLevel(this)">🌱 آسان</div>
+<div class="card" onclick="setLevel(this)">⚡ متوسط</div>
+<div class="card" onclick="setLevel(this)">🔥 سخت</div>
 </div>
 
 <div id="timerBox" onclick="startGame()">
-  <div class="timerIcon">⏱</div> شروع
+<div class="timerIcon">⏱</div> شروع
 </div>
 
 <div id="question"></div>
 <div id="shape"></div>
 
 <div class="answerRow">
-  <input type="number" id="answer" class="bigInput" placeholder="جواب را بنویس"
-         onkeydown="if(event.key==='Enter')checkAnswer()">
-  <button id="submitBtn" onclick="checkAnswer()">ثبت جواب</button>
+<input type="number" id="answer" class="bigInput" placeholder="جواب را بنویس"
+onkeydown="if(event.key==='Enter')checkAnswer()">
+<button id="submitBtn" onclick="checkAnswer()">ثبت جواب</button>
 </div>
 
-<div class="row" style="justify-content:center; margin-top:12px;">
-  <div class="card" onclick="saveReport()">💾 ذخیره</div>
-  <div class="card" onclick="window.print()">🖨 چاپ</div>
+<div class="row">
+<div class="card" onclick="window.print()">🖨 چاپ</div>
+<div class="card" onclick="window.print()">💾 ذخیره</div>
 </div>
 
-<div id="score">✅ <span id="ok">0</span> | ❌ <span id="bad">0</span></div>
-<div id="feedback" style="font-size:24px;font-weight:bold;margin-top:12px;"></div>
+<div id="score">
+✅ <span id="okSpan">0</span> | ❌ <span id="badSpan">0</span>
+</div>
 
+<div id="feedback"></div>
 </div>
 
 <script>
-let mode="test",level="easy";
-let a,b,correct;
-let ok=0,bad=0,count=0;
-let time=10,timer=null;
-let studentSaved="";
-const okSpan=document.getElementById("ok");
-const badSpan=document.getElementById("bad");
-const feedback=document.getElementById("feedback");
-const submitBtn=document.getElementById("submitBtn");
+let mode="test",level="آسان";
+let a,b,correct,count=0;
+let ok=0,bad=0,time=10,timer=null;
+let nameSaved=false;
+
+const okSpan=document.getElementById("okSpan");
+const badSpan=document.getElementById("badSpan");
+const studentName=document.getElementById("studentName");
+
+const soundOk=new Audio("https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3");
+const soundBad=new Audio("https://assets.mixkit.co/active_storage/sfx/950/950-preview.mp3");
+
+function changeBackground(){
+const colors=["#e3f2fd","#ffe0b2","#dcedc8","#ffccbc","#f3e5f5","#fff9c4"];
+document.body.style.background=colors[Math.floor(Math.random()*colors.length)];
+}
+
+function updateScore(){okSpan.innerText=ok;badSpan.innerText=bad;}
 
 function setMode(m,el){
-  mode=m;
-  el.parentNode.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
+mode=m;
+el.parentNode.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+el.classList.add('active');
 }
-function setLevel(el){
-  el.parentNode.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
-  el.classList.add('active');
-  level=el.innerText;
-}
-function startGame(){
-  if(!studentSaved){
-    if(studentName.value.trim()===""){alert("نام را وارد کن");return;}
-    studentSaved=studentName.value;
-  }
-  ok=bad=count=0;
-  updateScore();
-  newQuestion();
-}
-function getRange(){
-  if(level.includes("آسان")) return [1,5];
-  if(level.includes("متوسط")) return [2,7];
-  return [3,10];
-}
-function newQuestion(){
-  clearInterval(timer);
-  count++;
-  answer.value="";
-  feedback.innerText="";
-  submitBtn.innerHTML="ثبت جواب";
-  let [min,max]=getRange();
-  a=Math.floor(Math.random()*(max-min+1))+min;
-  b=Math.floor(Math.random()*(max-min+1))+min;
-  correct=a*b;
-  question.innerHTML=`${a} × ${b}`;
-  shape.innerHTML="";
-  if(mode==="practice"){
-    for(let i=0;i<a;i++) shape.innerHTML+="● ".repeat(b)+"<br>";
-    timerBox.innerHTML="🧠 تمرینی";
-  }else startTimer();
-}
-function startTimer(){
-  time=15;
-  timerBox.innerHTML='<div class="timerIcon">⏱</div> '+time;
-  timer=setInterval(()=>{
-    time--;
-    timerBox.innerHTML='<div class="timerIcon">⏱</div> '+time;
-    if(time<=0){
-      clearInterval(timer);
-      bad++;
-      updateScore();
-      showFeedback(false);
-      checkEnd();
-    }
-  },1000);
-}
-function checkAnswer(){
-  clearInterval(timer);
-  if(Number(answer.value)===correct){ok++;showFeedback(true);}
-  else{bad++;showFeedback(false);}
-  updateScore();
-  checkEnd();
-}
-function showFeedback(isCorrect){
-  feedback.innerText=isCorrect?"درست!":"اشتباه!";
-  feedback.className=isCorrect?"correct":"wrong";
-}
-function updateScore(){okSpan.innerText=ok;badSpan.innerText=bad;}
-function checkEnd(){
-  if(count>=10)return;
-  setTimeout(newQuestion,600);
-}
-function saveReport(){window.print();}
-</script>
 
+function setLevel(el){
+el.parentNode.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+el.classList.add('active');
+level=el.innerText;
+}
+
+function getRange(){
+if(level.includes("آسان"))return[1,5];
+if(level.includes("متوسط"))return[2,7];
+return[3,10];
+}
+
+function startGame(){
+if(!nameSaved){
+if(studentName.value.trim()===""){
+feedback.innerText="✋ ابتدا نام دانش‌آموز را وارد کن";
+return;
+}
+nameSaved=true;
+}
+count=0;ok=0;bad=0;
+updateScore();
+newQuestion();
+}
+
+function newQuestion(){
+changeBackground();
+clearInterval(timer);
+count++;
+if(count>10){showStamp();return;}
+answer.value="";
+feedback.innerText="";
+let[min,max]=getRange();
+a=Math.floor(Math.random()*(max-min+1))+min;
+b=Math.floor(Math.random()*(max-min+1))+min;
+correct=a*b;
+question.innerText=`${a} × ${b}`;
+shape.innerHTML="";
+if(mode==="practice"){
+for(let i=0;i<a;i++)shape.innerHTML+="● ".repeat(b)+"<br>";
+}else startTimer();
+}
+
+function startTimer(){
+time=10;
+timerBox.innerHTML='<div class="timerIcon">⏱</div>'+time;
+timer=setInterval(()=>{
+time--;
+timerBox.innerHTML='<div class="timerIcon">⏱</div>'+time;
+if(time<=0){
+clearInterval(timer);
+bad++;soundBad.play();
+updateScore();
+feedback.innerText="اشتباه ✖";
+checkEnd();
+}
+},1000);
+}
+
+function checkAnswer(){
+clearInterval(timer);
+if(Number(answer.value)===correct){
+ok++;soundOk.play();
+feedback.innerText="درست ✔";
+}else{
+bad++;soundBad.play();
+feedback.innerText="اشتباه ✖";
+}
+updateScore();
+checkEnd();
+}
+
+function checkEnd(){
+if(count>=10){showStamp();return;}
+setTimeout(newQuestion,600);
+}
+
+function showStamp(){
+let text="",cls="";
+if(bad===0){text="«عالی»";cls="great";}
+else if(bad===1){text="«خیلی خوب»";cls="verygood";}
+else if(bad===2){text="«خوب»";cls="good";}
+else if(bad===3){text="«قابل قبول»";cls="ok";}
+else{text="«بیشتر تمرین کن»";cls="trymore";}
+
+const s=document.createElement("div");
+s.className="stamp";
+s.innerHTML=`
+<div class="stampBox ${cls}">
+<div style="font-size:34px;font-weight:bold">${text}</div>
+<div style="font-size:22px;margin-top:6px">«یاورزاده»</div>
+<button onclick="restart()">شروع دوباره</button>
+</div>`;
+document.body.appendChild(s);
+}
+
+function restart(){
+document.querySelector(".stamp").remove();
+startGame();
+}
+</script>
 </body>
 </html>
-
