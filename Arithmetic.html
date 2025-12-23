@@ -1,121 +1,345 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="fa">
 <head>
 <meta charset="UTF-8">
-<title>مراحل الگوی حسابی</title>
+<title>بازی با الگوی حسابی</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
+/* ======================================================
+   بدنه و باکس اصلی
+====================================================== */
 body{
+    background:#eef2ff;
     font-family:tahoma;
-    background:#f2f5ff;
     text-align:center;
     padding:20px
 }
-
-/* باکس کلی */
-.box{
-    max-width:520px;
-    margin:14px auto;
-    border-radius:18px;
-    padding:18px;
-    box-shadow:0 10px 25px rgba(0,0,0,.18);
+#gameBox{
+    max-width:500px;
+    margin:auto;
+    background:#fff;
+    padding:25px;
+    border-radius:22px;
+    box-shadow:0 14px 35px rgba(0,0,0,.25)
 }
 
-/* تیترها */
-.box h2{
-    margin:0 0 10px;
-    font-size:22px;
+/* ======================================================
+   باکس نام و لوگو
+====================================================== */
+.input-wrapper{
+    position:relative;
+    width:60%;
+    margin:12px auto;
+    height:50px;
+}
+.bigInput{
+    width:100%;
+    height:100%;
+    padding-right:60px;
+    font-size:18px;
+    border-radius:14px;
+    box-sizing:border-box
+}
+.logo-link{
+    position:absolute;
+    right:0;
+    top:0;
+    height:100%;
+    display:flex;
+    align-items:center;
+    padding-right:6px
+}
+.logo-link img{
+    height:90%;
+    animation:seesaw 1.8s ease-in-out infinite;
+    transform-origin:center bottom
+}
+@keyframes seesaw{
+    0%{transform:rotate(-10deg)}
+    50%{transform:rotate(10deg)}
+    100%{transform:rotate(-10deg)}
 }
 
-/* دکمه نمایش */
-.toggle-btn{
-    margin-top:8px;
-    padding:8px 18px;
-    border:none;
-    border-radius:12px;
-    font-size:15px;
-    cursor:pointer;
-    color:#fff;
-}
-
-/* متن مخفی */
-.content{
-    display:none;
-    margin-top:12px;
+/* ======================================================
+   فرمول
+====================================================== */
+#formula{
+    margin:6px 0 10px;
+    font-weight:bold;
     font-size:16px;
-    line-height:1.8;
+    line-height:1.4
+}
+#formula .plus{color:#2e7d32}
+#formula .minus{color:#c62828}
+
+/* ======================================================
+   انتخاب سطح
+====================================================== */
+.row{
+    display:flex;
+    gap:10px;
+    margin:10px;
+    justify-content:center
+}
+.card{
+    flex:1;
+    padding:14px;
+    border-radius:14px;
+    background:#e3e9ff;
+    font-weight:bold;
+    cursor:pointer;
+    transition:.3s
+}
+.card.active{
+    background:#5c6bc0;
+    color:#fff
 }
 
-/* رنگ‌بندی باکس‌ها */
-.intro{background:#e3f2fd}
-.step1{background:#e8f5e9}
-.step2{background:#fffde7}
-.step3{background:#f3e5f5}
-.note{background:#ffebee}
+/* ======================================================
+   نمایش سوال و گزینه‌ها
+====================================================== */
+#pattern{
+    font-size:20px;
+    font-weight:bold;
+    margin:10px;
+    color:#3949ab
+}
+.options{
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+    margin-top:10px
+}
+.option{
+    background:#e3e9ff;
+    padding:10px;
+    border-radius:10px;
+    cursor:pointer
+}
+.option.correct{background:#4caf50;color:#fff}
+.option.wrong{background:#f44336;color:#fff}
 
-.intro .toggle-btn{background:#1e88e5}
-.step1 .toggle-btn{background:#43a047}
-.step2 .toggle-btn{background:#f9a825}
-.step3 .toggle-btn{background:#8e24aa}
-.note .toggle-btn{background:#e53935}
+/* ======================================================
+   امتیاز
+====================================================== */
+#score{margin-top:10px;font-size:18px}
+#ok{color:green;font-weight:bold}
+#bad{color:red;font-weight:bold}
+
+/* ======================================================
+   مهر پایانی
+====================================================== */
+.stamp{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.55);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:9999
+}
+.stampBox{
+    padding:28px 36px;
+    border-radius:22px;
+    transform:rotate(-8deg);
+    text-align:center;
+    color:#000
+}
+.great{background:#81c784}
+.verygood{background:#aed581}
+.good{background:#fff59d}
+.ok{background:#ffcc80}
+.trymore{background:#ef9a9a}
+
+/* فقط زمینه دکمه‌های روی مهر سبز */
+.stampBox button{
+    background:#4caf50;
+    color:#fff;
+    margin-top:10px;
+    padding:10px 26px;
+    font-size:16px;
+    border:none;
+    border-radius:14px;
+    cursor:pointer
+}
+
+/* ======================================================
+   تنظیمات چاپ
+====================================================== */
+@media print{
+    body *{visibility:hidden}
+    #printArea, #printArea *{visibility:visible}
+    #printArea{
+        position:absolute;
+        inset:0;
+        background:#fff;
+        padding:30px;
+        font-family:tahoma;
+        text-align:right
+    }
+}
 </style>
 </head>
 
 <body>
 
-<!-- الگوی حسابی چیست -->
-<div class="box intro">
-<h2>الگوی حسابی چیست؟</h2>
-<button class="toggle-btn" onclick="toggle(this)">نمایش توضیح</button>
-<div class="content">
-الگوی حسابی یعنی یک دنباله عددی که هر بار به عدد قبلی، یک مقدار ثابت اضافه یا کم می‌شود.
+<div id="gameBox">
+<h2>🎯 بازی با الگوی حسابی</h2>
+
+<div class="input-wrapper">
+<input id="studentName" class="bigInput" placeholder="نام دانش‌آموز">
+<a class="logo-link"><img src="https://s6.uupload.ir/files/logos1_f7lj.png"></a>
+</div>
+
+<div id="formula">
+<div class="plus">یک عدد + فاصله × شماره شکل = رابطه</div>
+<div class="minus">یک عدد − فاصله × شماره شکل = رابطه</div>
+</div>
+
+<div class="row">
+<div class="card active" onclick="setLevel(this)">آسان</div>
+<div class="card" onclick="setLevel(this)">متوسط</div>
+<div class="card" onclick="setLevel(this)">سخت</div>
+</div>
+
+<div id="pattern"></div>
+<div class="options" id="options"></div>
+
+<div id="score">
+درست: <span id="ok">0</span> | غلط: <span id="bad">0</span>
 </div>
 </div>
 
-<!-- مرحله 1 -->
-<div class="box step1">
-<h2>مرحله ۱</h2>
-<button class="toggle-btn" onclick="toggle(this)">نمایش توضیح</button>
-<div class="content">
-هر عدد داده شده را به ترتیب، شماره‌گذاری می‌کنیم  
-(شکل (1)، شکل (2)، شکل (3) و …).
-</div>
-</div>
-
-<!-- مرحله 2 -->
-<div class="box step2">
-<h2>مرحله ۲</h2>
-<button class="toggle-btn" onclick="toggle(this)">نمایش توضیح</button>
-<div class="content">
-فاصله بین اعداد را پیدا می‌کنیم.  
-این فاصله در الگوهای حسابی همیشه ثابت است.
-</div>
-</div>
-
-<!-- مرحله 3 -->
-<div class="box step3">
-<h2>مرحله ۳</h2>
-<button class="toggle-btn" onclick="toggle(this)">نمایش توضیح</button>
-<div class="content">
-اعداد را در رابطه قرار می‌دهیم  
-و با استفاده از فاصله و شماره جمله، مقدار موردنظر را پیدا می‌کنیم.
-</div>
-</div>
-
-<!-- نکته -->
-<div class="box note">
-<h2>نکته مهم ⭐</h2>
-<button class="toggle-btn" onclick="toggle(this)">نمایش نکته</button>
-<div class="content">
-در بعضی از رابطه‌ها (مانند الگوهای زوج)،  
-نیازی به جمع یا منها کردن نیست  
-و فقط شماره شکل در فاصله ضرب می‌شود.
-</div>
+<!-- ناحیه مخصوص چاپ -->
+<div id="printArea" style="display:none">
+<h2>گزارش بازی الگوی حسابی</h2>
+<p>نام دانش‌آموز: <strong id="pName"></strong></p>
+<p>تعداد پاسخ درست: <strong id="pOk"></strong></p>
+<p>تعداد پاسخ غلط: <strong id="pBad"></strong></p>
 </div>
 
 <script>
-function toggle(btn){
-    const content = btn.nextElementSibling;
-    content.style.display = content.style.display === "block" ? "none" : "block";
+let ok=0,bad=0,count=0,correct=0;
+let level="آسان",firstTime=true,mediumEasyCount=0;
+
+const sndOk=new Audio("https://assets.mixkit.co/active_storage/sfx/2000/2000-preview.mp3");
+const sndBad=new Audio("https://assets.mixkit.co/active_storage/sfx/950/950-preview.mp3");
+
+const studentName=document.getElementById("studentName");
+const pattern=document.getElementById("pattern");
+const optionsDiv=document.getElementById("options");
+const okSpan=document.getElementById("ok");
+const badSpan=document.getElementById("bad");
+
+function setLevel(el){
+    el.parentNode.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
+    el.classList.add('active');
+    level=el.innerText;
+    if(firstTime && studentName.value.trim()===""){
+        alert("لطفاً نام دانش‌آموز را وارد کنید");
+        return;
+    }
+    newRound();
+}
+
+function getRandomD(){return Math.floor(Math.random()*3)+1;}
+function getRandomStart(){return Math.floor(Math.random()*5)+1;}
+function getRandomSentence(){return Math.floor(Math.random()*10)+6;}
+
+function newRound(){
+    optionsDiv.innerHTML="";
+    count++;
+    if(count>10){finish();return;}
+
+    let a1=getRandomStart();
+    let d=getRandomD();
+    let n=(level==="سخت")?getRandomSentence():4;
+    if(level==="متوسط"){if(mediumEasyCount<5)n=4;else n=getRandomSentence();}
+
+    let nums=[];
+    for(let i=0;i<5;i++) nums.push(a1+i*d);
+
+    correct=(level==="آسان"||(level==="متوسط"&&mediumEasyCount<5))
+        ? a1+4*d
+        : a1+(n-1)*d;
+
+    pattern.innerText=(level==="سخت"||(level==="متوسط"&&mediumEasyCount>=5))
+        ? `جمله ${n}ام این دنباله را پیدا کنید: ${nums.slice(0,4).join(" ، ")} ، ؟`
+        : `الگو: ${nums.slice(0,4).join(" ، ")} ، ؟`;
+
+    let totalOptions=(level==="آسان")?3:4;
+    let correctIndex=Math.floor(Math.random()*totalOptions);
+    let used=[correct];
+
+    for(let i=0;i<totalOptions;i++){
+        let opt=document.createElement("div");
+        opt.className="option";
+        let val;
+        if(i===correctIndex){val=correct;}
+        else{
+            do{
+                val=correct+(Math.floor(Math.random()*5)+1)*(Math.random()<0.5?-1:1);
+            }while(used.includes(val));
+            used.push(val);
+        }
+        opt.innerText=val;
+        opt.onclick=()=>checkOption(opt,i===correctIndex);
+        optionsDiv.appendChild(opt);
+    }
+    if(level==="متوسط") mediumEasyCount++;
+}
+
+function checkOption(el,isCorrect){
+    if(isCorrect){ok++;sndOk.play();el.classList.add("correct");}
+    else{bad++;sndBad.play();el.classList.add("wrong");}
+    okSpan.innerText=ok;
+    badSpan.innerText=bad;
+    setTimeout(newRound,700);
+}
+
+function finish(){
+    document.getElementById("pName").innerText=studentName.value;
+    document.getElementById("pOk").innerText=ok;
+    document.getElementById("pBad").innerText=bad;
+    document.getElementById("printArea").style.display="block";
+
+    let text="",cls="";
+    if(bad===0){text="«عالی»";cls="great";}
+    else if(bad===1){text="«خیلی خوب»";cls="verygood";}
+    else if(bad===2){text="«خوب»";cls="good";}
+    else if(bad===3){text="«قابل قبول»";cls="ok";}
+    else{text="«بیشتر تمرین کن»";cls="trymore";}
+
+    const s=document.createElement("div");
+    s.className="stamp";
+    s.innerHTML=`
+    <div class="stampBox ${cls}">
+        <div style="font-size:30px">${text}</div>
+        <div>«یاورزاده»</div>
+        <button onclick="restart()">دوباره انجام بده</button>
+        <button onclick="window.print()">چاپ</button>
+        <button onclick="saveReport()">ذخیره</button>
+    </div>`;
+    document.body.appendChild(s);
+}
+
+function restart(){
+    document.querySelector(".stamp").remove();
+    ok=bad=count=mediumEasyCount=0;
+    okSpan.innerText=0;
+    badSpan.innerText=0;
+    firstTime=false;
+    newRound();
+}
+
+function saveReport(){
+    let content=document.getElementById("printArea").innerText;
+    let blob=new Blob([content],{type:"text/plain;charset=utf-8"});
+    let link=document.createElement("a");
+    link.href=URL.createObjectURL(blob);
+    link.download="گزارش_الگوی_حسابی.txt";
+    link.click();
 }
 </script>
 
