@@ -1,0 +1,123 @@
+﻿<!DOCTYPE html>
+<html lang="fa">
+<head>
+<meta charset="UTF-8">
+<title>مراحل الگوی حسابی</title>
+<style>
+body{
+    font-family:tahoma;
+    background:#f2f5ff;
+    text-align:center;
+    padding:20px
+}
+
+/* باکس کلی */
+.box{
+    max-width:520px;
+    margin:14px auto;
+    border-radius:18px;
+    padding:18px;
+    box-shadow:0 10px 25px rgba(0,0,0,.18);
+}
+
+/* تیترها */
+.box h2{
+    margin:0 0 10px;
+    font-size:22px;
+}
+
+/* دکمه نمایش */
+.toggle-btn{
+    margin-top:8px;
+    padding:8px 18px;
+    border:none;
+    border-radius:12px;
+    font-size:15px;
+    cursor:pointer;
+    color:#fff;
+}
+
+/* متن مخفی */
+.content{
+    display:none;
+    margin-top:12px;
+    font-size:16px;
+    line-height:1.8;
+}
+
+/* رنگ‌بندی باکس‌ها */
+.intro{background:#e3f2fd}
+.step1{background:#e8f5e9}
+.step2{background:#fffde7}
+.step3{background:#f3e5f5}
+.note{background:#ffebee}
+
+.intro .toggle-btn{background:#1e88e5}
+.step1 .toggle-btn{background:#43a047}
+.step2 .toggle-btn{background:#f9a825}
+.step3 .toggle-btn{background:#8e24aa}
+.note .toggle-btn{background:#e53935}
+</style>
+</head>
+
+<body>
+
+<!-- الگوی حسابی چیست -->
+<div class="box intro">
+<h2>الگوی حسابی چیست؟</h2>
+<button class="toggle-btn" onclick="toggle(this)">نمایش توضیح</button>
+<div class="content">
+الگوی حسابی یعنی یک دنباله عددی که هر بار به عدد قبلی، یک مقدار ثابت اضافه یا کم می‌شود.
+</div>
+</div>
+
+<!-- مرحله 1 -->
+<div class="box step1">
+<h2>مرحله ۱</h2>
+<button class="toggle-btn" onclick="toggle(this)">نمایش توضیح</button>
+<div class="content">
+هر عدد داده شده را به ترتیب، شماره‌گذاری می‌کنیم  
+(شکل (1)، شکل (2)، شکل (3) و …).
+</div>
+</div>
+
+<!-- مرحله 2 -->
+<div class="box step2">
+<h2>مرحله ۲</h2>
+<button class="toggle-btn" onclick="toggle(this)">نمایش توضیح</button>
+<div class="content">
+فاصله بین اعداد را پیدا می‌کنیم.  
+این فاصله در الگوهای حسابی همیشه ثابت است.
+</div>
+</div>
+
+<!-- مرحله 3 -->
+<div class="box step3">
+<h2>مرحله ۳</h2>
+<button class="toggle-btn" onclick="toggle(this)">نمایش توضیح</button>
+<div class="content">
+اعداد را در رابطه قرار می‌دهیم  
+و با استفاده از فاصله و شماره جمله، مقدار موردنظر را پیدا می‌کنیم.
+</div>
+</div>
+
+<!-- نکته -->
+<div class="box note">
+<h2>نکته مهم ⭐</h2>
+<button class="toggle-btn" onclick="toggle(this)">نمایش نکته</button>
+<div class="content">
+در بعضی از رابطه‌ها (مانند الگوهای زوج)،  
+نیازی به جمع یا منها کردن نیست  
+و فقط شماره شکل در فاصله ضرب می‌شود.
+</div>
+</div>
+
+<script>
+function toggle(btn){
+    const content = btn.nextElementSibling;
+    content.style.display = content.style.display === "block" ? "none" : "block";
+}
+</script>
+
+</body>
+</html>
