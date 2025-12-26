@@ -1,0 +1,429 @@
+﻿<!DOCTYPE html>
+
+<html lang="fa">
+
+<head>
+<meta charset="UTF-8">
+<title>بازی الگوی مربعی</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+<style>
+body{
+    background:#f1f8e9;
+    font-family:tahoma;
+    text-align:center;
+    padding:20px
+}
+#gameBox{
+    max-width:500px;
+    margin:auto;
+    background:#fff;
+    padding:25px;
+    border-radius:22px;
+    box-shadow:0 14px 35px rgba(0,0,0,.25)
+}
+
+
+/* نام */
+
+.input-wrapper{
+
+    position:relative;
+
+    width:60%;
+
+    margin:10px auto;
+
+    height:50px;
+
+}
+
+.bigInput{
+
+    width:100%;
+
+    height:100%;
+
+    font-size:18px;
+ 
+   border-radius:14px;
+
+   padding-left:40px;
+    box-sizing:border-box;
+}
+.logo-link{
+    position:absolute;
+    right:6px;
+    top:50%;
+    transform:translateY(-50%);
+    height:100%;
+    display:flex;
+    align-items:center;
+}
+.logo-link img{
+    height:65%;
+    animation:seesaw 1.8s ease-in-out infinite;
+    transform-origin:center bottom;
+}
+
+@keyframes seesaw{
+    0%{transform:rotate(-10deg)}
+    50%{transform:rotate(10deg)}
+    100%{transform:rotate(-10deg)}
+}
+
+#nameMsg{color:red;font-size:14px;display:none}
+
+/* فرمول */
+#formula{
+    margin:10px 0;
+    color:#1565c0;
+    font-weight:bold;
+}
+
+/* سطح */
+.row{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    margin:10px
+}
+.card{
+    padding:12px 18px;
+    background:#c5e1a5;
+    border-radius:12px;
+    cursor:pointer;
+    font-weight:bold
+}
+.card.active{
+    background:#558b2f;
+    color:#fff
+}
+
+/* سوال */
+#pattern{
+    margin:12px;
+    font-weight:bold;
+    color:#2e7d32
+}
+
+/* شکل‌ها */
+.shapes{
+    display:flex;
+    justify-content:center;
+    gap:16px;
+    margin-bottom:10px
+}
+.shapeBox{text-align:center}
+.shapeTitle{font-size:14px;margin-bottom:4px}
+.grid{
+    display:grid;
+    gap:3px;
+    justify-content:center
+}
+.square{
+    width:14px;
+    height:14px;
+    animation:pop .3s ease forwards;
+    transform:scale(0)
+}
+@keyframes pop{to{transform:scale(1)}}
+
+/* گزینه‌ها */
+.options{
+    display:flex;
+    flex-direction:column;
+    gap:8px
+}
+.option{
+    background:#dcedc8;
+    padding:10px;
+    border-radius:10px;
+    cursor:pointer
+}
+.option.correct{background:#4caf50;color:#fff}
+.option.wrong{background:#f44336;color:#fff}
+
+/* امتیاز */
+#score{margin-top:10px}
+#ok{color:green;font-weight:bold}
+#bad{color:red;font-weight:bold}
+
+/* مهر */
+.stamp{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,.5);
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:999
+}
+.stampBox{
+    padding:30px;
+    border-radius:20px;
+    text-align:center;
+}
+.stampBox button{
+    margin-top:10px;
+    padding:10px 22px;
+    border:none;
+    border-radius:12px;
+    background:#2e7d32;
+    color:#fff;
+    font-size:16px;
+    cursor:pointer
+}
+.great{background:#81c784}
+.verygood{background:#aed581}
+.good{background:#fff59d}
+.ok{background:#ffcc80}
+.trymore{background:#ef9a9a}
+</style>
+</head>
+
+<body>
+
+<div id="gameBox">
+<h2>🟩 بازی الگوی مربعی</h2>
+
+<!-- نام و لوگو -->
+<div class="input-wrapper">
+<input id="studentName" class="bigInput" placeholder="نام دانش‌آموز">
+<div style="position:absolute; right:5px; top:50%; transform:translateY(-50%); font-weight:bold; background:#fbfefb; color:#fff; border-radius:50%; width:40px; height:40px; display:flex; justify-content:center; align-items:center"><a class="logo-link"><img src="https://s6.uupload.ir/files/logos1_f7lj.png" alt="logo"></a></div>
+</div>
+
+<div id="nameMsg">نام را وارد کنید</div>
+
+<!-- فرمول -->
+<div id="formula">( شماره شکل × خودش )</div>
+
+<!-- سطح -->
+<div class="row">
+<div class="card active" onclick="setLevel('easy',this)">آسان</div>
+<div class="card" onclick="setLevel('hard',this)">سخت</div>
+</div>
+
+<!-- سوال -->
+<div id="pattern"></div>
+<div class="shapes" id="shapes"></div>
+<div class="options" id="options"></div>
+
+<!-- شمارش -->
+<div id="score">
+درست: <span id="ok">0</span> |
+غلط: <span id="bad">0</span>
+</div>
+</div>
+
+<script>
+// ===== متغیرهای اصلی =====
+let level="easy", q=0, ok=0, bad=0;
+const nameInput=document.getElementById("studentName");
+const nameMsg=document.getElementById("nameMsg");
+const pattern=document.getElementById("pattern");
+const shapes=document.getElementById("shapes");
+const options=document.getElementById("options");
+const okSpan=document.getElementById("ok");
+const badSpan=document.getElementById("bad");
+
+// رنگ‌ها
+const colors=["#2e7d32","#1565c0","#ff8f00","#d81b60","#6a1b9a","#f4511e"];
+
+// ===== تغییر سطح =====
+function setLevel(lv,el){
+    if(nameInput.value.trim()===""){nameMsg.style.display="block"; return;}
+    nameMsg.style.display="none";
+    document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+    el.classList.add("active");
+    level=lv;
+    resetGame();
+    newQuestion();
+}
+
+// ===== بازنشانی =====
+function resetGame(){
+    q=0; ok=0; bad=0;
+    okSpan.innerText=0; badSpan.innerText=0;
+    shapes.innerHTML=""; options.innerHTML=""; pattern.innerText="";
+    const s=document.querySelector(".stamp"); if(s) s.remove();
+}
+
+// ===== عدد تصادفی =====
+function rand(min,max){return Math.floor(Math.random()*(max-min+1))+min;}
+
+// ===== سوال جدید برای سطح آسان =====
+function newQuestionEasy(){
+    shapes.innerHTML=""; options.innerHTML=""; q++;
+    
+    if(q>10){finish(); return;}
+    
+    const color=colors[rand(0,colors.length-1)];
+    
+    // در سطح آسان، یک نقطه شروع تصادفی بین 1 تا 5 انتخاب می‌کنیم
+    const start = rand(1, 5);
+    
+    pattern.innerText=`شکل‌ها با ${start} شروع می‌شوند. شکل پنجم چند مربع دارد؟`;
+    
+    // نمایش 4 شکل اول (از start تا start+3)
+    for(let i=0; i<4; i++){
+        const currentShape = start + i;
+        const box=document.createElement("div"); 
+        box.className="shapeBox";
+        box.innerHTML=`<div class="shapeTitle">شکل ${i+1}</div>`;
+        
+        const g=document.createElement("div"); 
+        g.className="grid";
+        g.style.gridTemplateColumns=`repeat(${currentShape},14px)`;
+        
+        for(let k=0; k<currentShape*currentShape; k++){
+            const s=document.createElement("div"); 
+            s.className="square";
+            s.style.background=color; 
+            g.appendChild(s);
+        }
+        box.appendChild(g); 
+        shapes.appendChild(box);
+    }
+    
+    // پاسخ صحیح: شکل پنجم (start+4) به توان 2
+    const correct = (start + 4) * (start + 4);
+    createOptionsEasy(correct);
+}
+
+// ===== ساخت گزینه‌ها برای سطح آسان =====
+function createOptionsEasy(correct){
+    const values=new Set([correct]);
+    
+    // ایجاد گزینه‌های متنوع
+    while(values.size<3){
+        // ایجاد گزینه‌های منحرف کننده بر اساس الگوهای مختلف
+        let v;
+        const randomType = rand(1, 4);
+        
+        switch(randomType){
+            case 1: // جمع با یک عدد تصادفی
+                v = correct + rand(5, 20);
+                break;
+            case 2: // تفریق با یک عدد تصادفی
+                v = correct - rand(5, 15);
+                if(v < 1) v = correct + rand(1, 10);
+                break;
+            case 3: // استفاده از فرمول غلط (n * (n+1))
+                const n = Math.sqrt(correct);
+                v = n * (n + 1);
+                break;
+            case 4: // استفاده از فرمول غلط (n * 2)
+                const m = Math.sqrt(correct);
+                v = m * 2;
+                break;
+        }
+        
+        if(v > 0 && v !== correct) values.add(v);
+    }
+    
+    // نمایش گزینه‌ها به صورت تصادفی
+    [...values].sort(()=>Math.random()-0.5).forEach(v=>{
+        const o=document.createElement("div"); 
+        o.className="option"; 
+        o.innerText=v;
+        o.onclick=()=>{
+            options.querySelectorAll(".option").forEach(opt=>opt.onclick=null);
+            if(v===correct){
+                ok++; 
+                o.classList.add("correct");
+            } else {
+                bad++; 
+                o.classList.add("wrong");
+            }
+            okSpan.innerText=ok; 
+            badSpan.innerText=bad;
+            setTimeout(newQuestion,600);
+        };
+        options.appendChild(o);
+    });
+}
+
+// ===== سوال جدید برای سطح سخت =====
+function newQuestionHard(){
+    shapes.innerHTML=""; options.innerHTML=""; q++;
+    
+    if(q>15){finish(); return;}
+    
+    const n=rand(4,12);
+    pattern.innerText=`شکل ${n}‌ام چند مربع دارد؟`;
+    
+    // برای سطح سخت فقط سوال متنی است
+    createOptionsHard(n*n);
+}
+
+// ===== ساخت گزینه‌ها برای سطح سخت =====
+function createOptionsHard(correct){
+    const values=new Set([correct]);
+    
+    while(values.size<3){
+        let v=correct+rand(-30,30);
+        if(v>0 && v !== correct) values.add(v);
+    }
+    
+    [...values].sort(()=>Math.random()-0.5).forEach(v=>{
+        const o=document.createElement("div"); 
+        o.className="option"; 
+        o.innerText=v;
+        o.onclick=()=>{
+            options.querySelectorAll(".option").forEach(opt=>opt.onclick=null);
+            if(v===correct){
+                ok++; 
+                o.classList.add("correct");
+            } else {
+                bad++; 
+                o.classList.add("wrong");
+            }
+            okSpan.innerText=ok; 
+            badSpan.innerText=bad;
+            setTimeout(newQuestion,600);
+        };
+        options.appendChild(o);
+    });
+}
+
+// ===== سوال جدید (راه‌انداز اصلی) =====
+function newQuestion(){
+    if(level === "easy"){
+        newQuestionEasy();
+    } else {
+        newQuestionHard();
+    }
+}
+
+// ===== پایان بازی =====
+function finish(){
+    let text="",cls="";
+    if(bad===0){text="عالی"; cls="great";}
+    else if(bad<=1){text="خیلی خوب"; cls="verygood";}
+    else if(bad<=2){text="خوب"; cls="good";}
+    else if(bad<=3){text="قابل قبول"; cls="ok";}
+    else{text="بیشتر تمرین کن"; cls="trymore";}
+
+    const s=document.createElement("div"); s.className="stamp";
+    s.innerHTML=`
+    <div class="stampBox ${cls}">
+        <div style="font-size:28px">${text}</div>
+        <div style="font-size:22px">«یاورزاده»</div>
+        <p>نام: ${nameInput.value}</p>
+        <p>سطح: ${level==="easy"?"آسان":"سخت"}</p>
+        <p>درست: ${ok} | غلط: ${bad}</p>
+        <button onclick="window.print()">چاپ</button>
+        <button onclick="resetGame();newQuestion()">شروع دوباره</button>
+    </div>`;
+    document.body.appendChild(s);
+}
+
+// راه‌اندازی اولیه
+newQuestion();
+</script>
+
+</body>
+</html>
